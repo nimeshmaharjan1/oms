@@ -1,7 +1,7 @@
 export type ResponseType<T> = {
   message: string;
   data: T;
-  pagination: ResponsePaginationType;
+  pagination?: ResponsePaginationType;
 };
 
 export type ResponsePaginationType = {

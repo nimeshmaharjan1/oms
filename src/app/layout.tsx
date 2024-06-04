@@ -1,12 +1,12 @@
 import "@/styles/globals.css";
 import { DM_Sans as FontSans } from "next/font/google";
 
+import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
-import type { PropsWithChildren } from "react";
-import { ThemeProvider } from "@/providers/theme-provider";
-import { ModeToggle } from "@/components/theme-toggle";
 import QueryProvider from "@/providers/query-client.provider";
+import { ThemeProvider } from "@/providers/theme-provider";
 import type { Metadata } from "next";
+import type { PropsWithChildren } from "react";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -27,8 +27,11 @@ export default function RootLayout({ children }: PropsWithChildren) {
           fontSans.variable
         )}
       >
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-          <QueryProvider>{children}</QueryProvider>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+          <QueryProvider>
+            {children}
+            <Toaster />
+          </QueryProvider>
         </ThemeProvider>
       </body>
     </html>

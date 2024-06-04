@@ -53,7 +53,7 @@ const DashboardLayout: React.FC<PropsWithChildren> = (props) => {
               <Package2 className="h-4 w-4 transition-all group-hover:scale-110" />
               <span className="sr-only">Acme Inc</span>
             </Link>
-            <Tooltip>
+            {/* <Tooltip>
               <TooltipTrigger asChild>
                 <Link
                   href="/"
@@ -67,7 +67,7 @@ const DashboardLayout: React.FC<PropsWithChildren> = (props) => {
                 </Link>
               </TooltipTrigger>
               <TooltipContent side="right">Dashboard</TooltipContent>
-            </Tooltip>
+            </Tooltip> */}
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
@@ -117,7 +117,7 @@ const DashboardLayout: React.FC<PropsWithChildren> = (props) => {
                     <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
                     <span className="sr-only">Acme Inc</span>
                   </Link>
-                  <Link
+                  {/* <Link
                     href="/"
                     className={cn(
                       "flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground",
@@ -126,7 +126,7 @@ const DashboardLayout: React.FC<PropsWithChildren> = (props) => {
                   >
                     <Home className="h-5 w-5" />
                     Dashboard
-                  </Link>
+                  </Link> */}
                   <Link
                     href="/orders"
                     className={cn(

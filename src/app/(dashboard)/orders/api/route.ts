@@ -1,7 +1,12 @@
 import { prisma } from "@/lib/prisma";
+import { generateOrderId } from "@/lib/utils";
 import type { ResponseType } from "@/types/global.types";
 import type { Order } from "@prisma/client";
 import type { NextRequest } from "next/server";
+import {
+  createOrderSchema,
+  type CreateOrderSchemaType,
+} from "../_schemas/orders.schema";
 
 export async function GET(request: NextRequest) {
   try {
@@ -10,8 +15,8 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get("limit") || "10", 10);
     const skip = (page - 1) * limit;
 
-    const order_id = searchParams.get("order_id");
-    const customer_name = searchParams.get("customer_name");
+    // const order_id = searchParams.get("order_id");
+    // const customer_name = searchParams.get("customer_name");
     const status = searchParams.get("status");
 
     const searchQuery = searchParams.get("search");
@@ -23,6 +28,7 @@ export async function GET(request: NextRequest) {
       filters.OR = [
         { order_id: { contains: searchQuery } },
         { customer_name: { contains: searchQuery } },
+        { product_name: { contains: searchQuery } },
       ];
     }
     // if (order_id) {
@@ -71,6 +77,49 @@ export async function GET(request: NextRequest) {
     return Response.json(
       {
         message: "Error fetching orders",
+      },
+      {
+        status: 500,
+      }
+    );
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    const data: CreateOrderSchemaType = await request.json();
+    const response = createOrderSchema.safeParse(data);
+    /**
+     * Validate the request form data with zod
+     */
+    if (!response.success) {
+      const { errors } = response.error;
+      return Response.json(
+        {
+          error: { message: "Invalid request", errors },
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+    const order = await prisma.order.create({
+      data: {
+        ...data,
+        quantity: Number(data.quantity),
+        price: Number(data.price),
+        order_id: generateOrderId(),
+      },
+    });
+    return Response.json({
+      message: "Order has been created",
+      data: order,
+    } as ResponseType<{}>);
+  } catch (error) {
+    console.error("Error while creating the order", error);
+    return Response.json(
+      {
+        message: "Error while creating the order",
       },
       {
         status: 500,

@@ -22,7 +22,7 @@ const SalesDetails = () => {
       <Card x-chunk="dashboard-05-chunk-1">
         <CardHeader className="pb-2">
           <CardDescription>This Week</CardDescription>
-          <CardTitle className="text-4xl">{formatPrice(weeklyTotal)}</CardTitle>
+          <CardTitle className="text-3xl">{formatPrice(weeklyTotal)}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-xs text-muted-foreground">
@@ -39,7 +39,7 @@ const SalesDetails = () => {
       <Card x-chunk="dashboard-05-chunk-2">
         <CardHeader className="pb-2">
           <CardDescription>This Month</CardDescription>
-          <CardTitle className="text-4xl">
+          <CardTitle className="text-3xl">
             {" "}
             {formatPrice(monthlyTotal)}
           </CardTitle>

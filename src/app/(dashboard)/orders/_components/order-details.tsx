@@ -8,7 +8,17 @@ import {
   MoreVertical,
   Truck,
 } from "lucide-react";
-
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -33,9 +43,53 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { useOrderStore } from "../_store";
 import { formatPrice } from "@/lib/utils";
+import EditOrder from "./edit";
+import { Badge } from "@/components/ui/badge";
+import { ORDER_STATUS } from "@/lib/constants";
+import React, { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { cancelOrder, deleteOrder } from "../_services/orders.service";
+import { toast } from "sonner";
+import type { AxiosError } from "axios";
+import type { Order } from "@prisma/client";
 
-const OrderDetails = () => {
-  const { order } = useOrderStore();
+const OrderDetails: React.FC<{ order: Order }> = ({ order }) => {
+  const [showCancel, setShowCancel] = useState(false);
+  const [showTrash, setShowTrash] = useState(false);
+  const { setOrder } = useOrderStore();
+  const queryClient = useQueryClient();
+  const cancelMutation = useMutation((id: string) => cancelOrder(id), {
+    onSuccess: (data) => {
+      toast.success(data?.message);
+      queryClient.invalidateQueries(["get-all-orders"]);
+      queryClient.invalidateQueries(["get-single-order"]);
+      queryClient.invalidateQueries(["get-sales-details"]);
+      setOrder(data?.data);
+      setShowCancel(false);
+    },
+    onError: (error: AxiosError<{ message: string }>) => {
+      toast.error(
+        error?.response?.data?.message ??
+          "Error while trying to cancel the order"
+      );
+    },
+  });
+  const trashMutation = useMutation((id: string) => deleteOrder(id), {
+    onSuccess: (data) => {
+      toast.success(data?.message);
+      queryClient.invalidateQueries(["get-all-orders"]);
+      queryClient.invalidateQueries(["get-single-order"]);
+      queryClient.invalidateQueries(["get-sales-details"]);
+      setShowTrash(false);
+      setOrder(undefined);
+    },
+    onError: (error: AxiosError<{ message: string }>) => {
+      toast.error(
+        error?.response?.data?.message ??
+          "Error while trying to delete the order"
+      );
+    },
+  });
   if (!order) return <>Loading...</>;
   return (
     <div>
@@ -44,14 +98,6 @@ const OrderDetails = () => {
           <div className="grid gap-0.5">
             <CardTitle className="group flex items-center gap-2 text-lg">
               Order {order?.order_id}
-              <Button
-                size="icon"
-                variant="outline"
-                className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
-              >
-                <Copy className="h-3 w-3" />
-                <span className="sr-only">Copy Order ID</span>
-              </Button>
             </CardTitle>
             <CardDescription>
               Date:{" "}
@@ -59,12 +105,14 @@ const OrderDetails = () => {
             </CardDescription>
           </div>
           <div className="ml-auto flex items-center gap-1">
-            <Button disabled size="sm" variant="outline" className="h-8 gap-1">
+            <EditOrder id={order.id}></EditOrder>
+
+            {/* <Button disabled size="sm" variant="outline" className="h-8 gap-1">
               <Truck className="h-3.5 w-3.5" />
               <span className="lg:sr-only xl:not-sr-only xl:whitespace-nowrap">
                 Track Order
               </span>
-            </Button>
+            </Button> */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button size="icon" variant="outline" className="h-8 w-8">
@@ -73,10 +121,22 @@ const OrderDetails = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem>Edit</DropdownMenuItem>
                 {/* <DropdownMenuItem>Export</DropdownMenuItem> */}
+                <DropdownMenuItem
+                  onClick={() => {
+                    setShowCancel(true);
+                  }}
+                >
+                  Cancel
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Trash</DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setShowTrash(true);
+                  }}
+                >
+                  Trash
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -92,6 +152,21 @@ const OrderDetails = () => {
                 <span>{formatPrice(order?.price)}</span>
               </li>
             </ul>
+            <section className="flex">
+              <Badge
+                variant={
+                  order?.status === ORDER_STATUS.SHIPPED
+                    ? "default"
+                    : order?.status === ORDER_STATUS.DELIVERED
+                    ? "success"
+                    : order?.status === ORDER_STATUS.CANCELLED
+                    ? "destructive"
+                    : "secondary"
+                }
+              >
+                {order?.status}
+              </Badge>
+            </section>
             <Separator className="my-2" />
             <ul className="grid gap-3">
               <li className="flex items-center justify-between">
@@ -170,24 +245,50 @@ const OrderDetails = () => {
               {order?.updatedAt && new Date(order?.updatedAt).toLocaleString()}
             </time>
           </div>
-          {/* <Pagination className="ml-auto mr-0 w-auto">
-            <PaginationContent>
-              <PaginationItem>
-                <Button size="icon" variant="outline" className="h-6 w-6">
-                  <ChevronLeft className="h-3.5 w-3.5" />
-                  <span className="sr-only">Previous Order</span>
-                </Button>
-              </PaginationItem>
-              <PaginationItem>
-                <Button size="icon" variant="outline" className="h-6 w-6">
-                  <ChevronRight className="h-3.5 w-3.5" />
-                  <span className="sr-only">Next Order</span>
-                </Button>
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination> */}
         </CardFooter>
       </Card>
+      <AlertDialog open={showCancel} onOpenChange={setShowCancel}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will change the status of this order to{" "}
+              <strong>cancelled</strong>.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <Button
+              loading={cancelMutation.isLoading}
+              variant={"destructive"}
+              onClick={() => cancelMutation.mutate(order.id)}
+            >
+              Continue
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      <AlertDialog open={showTrash} onOpenChange={setShowTrash}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete this
+              order.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <Button
+              loading={trashMutation.isLoading}
+              variant={"destructive"}
+              onClick={() => trashMutation.mutate(order.id)}
+            >
+              Continue
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

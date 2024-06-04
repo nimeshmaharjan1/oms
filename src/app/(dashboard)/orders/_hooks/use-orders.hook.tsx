@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAllOrders } from "../_services/orders.service";
+import { getAllOrders, getSingleOrder } from "../_services/orders.service";
 import type { OrderStatusType } from "@/lib/constants";
 import { useOrderStore } from "../_store";
 
@@ -9,7 +9,7 @@ export const useGetAllOrders = (params: {
   page?: number;
   limit?: number;
 }) => {
-  const { setOrder } = useOrderStore();
+  const { setOrder, order } = useOrderStore();
   const ordersQuery = useQuery(
     ["get-all-orders", params.search, params.status, params.limit, params.page],
     () =>
@@ -19,9 +19,16 @@ export const useGetAllOrders = (params: {
     {
       keepPreviousData: true,
       onSuccess: (data) => {
+        if (order?.id) return;
         setOrder(data.data?.[0]);
       },
     }
   );
   return ordersQuery;
+};
+export const useGetSingleOrder = (id: string) => {
+  const orderQuery = useQuery(["get-single-order", id], () =>
+    getSingleOrder(id)
+  );
+  return orderQuery;
 };

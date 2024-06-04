@@ -49,6 +49,7 @@ import OrderDetails from "./_components/order-details";
 import SalesDetails from "./_components/sales-details";
 import { useGetAllOrders } from "./_hooks/use-orders.hook";
 import { useOrderStore } from "./_store";
+import OrdersSummary from "./_components/orders-summary";
 
 const OrdersPage = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -68,10 +69,6 @@ const OrdersPage = () => {
     page: queryForm.watch("page"),
     limit: queryForm.watch("limit"),
   });
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   const generatePaginationItems = (paginationData: ResponsePaginationType) => {
     const { current, totalPages } = paginationData;
@@ -126,14 +123,22 @@ const OrdersPage = () => {
     return pages;
   };
 
+  //For hydration error on the table
+  useEffect(() => {
+    if (!window) return;
+    setIsMounted(true);
+  }, []);
   if (!isMounted) return;
 
   return (
-    <main className="lg:grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-6 lg:grid-cols-3 xl:grid-cols-3">
+    <main className="lg:grid flex-1 items-start space-y-4 lg:space-y-0 gap-4 p-4 sm:px-6 sm:py-0 md:gap-6 lg:grid-cols-3 xl:grid-cols-3">
       <div className="lg:grid space-y-3 lg:space-y-0 auto-rows-max items-start gap-4 md:gap-6 lg:col-span-2">
         <div className="lg:grid space-y-3 lg:space-y-0 gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
           <CreateOrderCard></CreateOrderCard>
           <SalesDetails></SalesDetails>
+        </div>
+        <div className="hidden lg:block">
+          <OrdersSummary />
         </div>
         <Tabs defaultValue="week">
           <div className="flex items-center">
@@ -153,8 +158,8 @@ const OrdersPage = () => {
                       onChange={field.onChange}
                       value={field.value}
                       type="search"
-                      placeholder="Search..."
-                      className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
+                      placeholder="Search by Order ID, Customer, Product..."
+                      className="w-72 rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
                     />
                   )}
                 ></Controller>
@@ -292,7 +297,10 @@ const OrdersPage = () => {
           </TabsContent>
         </Tabs>
       </div>
-      {order && <OrderDetails></OrderDetails>}
+      {order && <OrderDetails order={order}></OrderDetails>}
+      <div className="block lg:hidden">
+        <OrdersSummary />
+      </div>
     </main>
   );
 };

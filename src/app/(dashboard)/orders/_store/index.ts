@@ -3,7 +3,7 @@ import { create } from "zustand";
 
 interface OrderState {
   order: Order | undefined;
-  setOrder: (order: Order) => void;
+  setOrder: (order: Order | undefined) => void;
 }
 
 export const useOrderStore = create<OrderState>()((set) => ({
