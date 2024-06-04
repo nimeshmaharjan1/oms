@@ -225,10 +225,12 @@ const OrdersPage = () => {
                         </p>
                       </div>
                     ) : query.data && query.data.data.length === 0 ? (
-                      <p className="text-medium py-4">
-                        No orders found. Please try changing the filter or the
-                        search.
-                      </p>
+                      <TableRow>
+                        <TableCell colSpan={7}>
+                          No orders found. Please try changing the filter or the
+                          search.
+                        </TableCell>
+                      </TableRow>
                     ) : (
                       query.data?.data?.map((rowOrder) => (
                         <TableRow
