@@ -7,7 +7,6 @@ import {
 } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
-import { getOrdersSummary } from "../_services/orders.service";
 import {
   BarChart,
   Bar,
@@ -24,9 +23,10 @@ import {
 } from "recharts";
 import { useTheme } from "next-themes";
 import useTailwind from "@/hooks/use-tailwind.hook";
-import type { OrderCount } from "../_types/order-summary.types";
+import type { OrderCount } from "../../_types/order-summary.types";
+import { getOrdersSummary } from "../../_services/orders.service";
 
-const OrdersSummary = () => {
+const TopProducts = () => {
   const { theme } = useTailwind();
   const query = useQuery(["get-order-summary"], getOrdersSummary);
   const [orderCounts, setOrderCounts] = useState<OrderCount[]>([]);
@@ -43,41 +43,7 @@ const OrdersSummary = () => {
   if (query.isLoading) return <>Loading...</>;
   return (
     <div className="grid grid-cols-5 gap-3">
-      <Card className="col-span-5 xl:col-span-3">
-        <CardHeader>
-          <CardTitle>Orders Count</CardTitle>
-          <CardDescription>
-            A line chart displaying the count of orders by status (e.g.,
-            Delivered, Shipped, Processing) to track order distribution and
-            trends.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="p-0 pr-6">
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={orderCounts}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="status" />
-              <YAxis />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: theme.colors.background,
-                }}
-                labelStyle={{
-                  color: theme.colors.primary.DEFAULT,
-                }}
-                itemStyle={{ color: theme.colors.primary.DEFAULT }}
-              />
-              <Line
-                type="monotone"
-                dataKey="count"
-                stroke={theme.colors.primary.DEFAULT}
-                strokeWidth={2}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
-      <Card className="col-span-5 xl:col-span-2">
+      <Card className="col-span-5">
         <CardHeader>
           <CardTitle>Top Products</CardTitle>
           <CardDescription>
@@ -115,4 +81,4 @@ const OrdersSummary = () => {
   );
 };
 
-export default OrdersSummary;
+export default TopProducts;

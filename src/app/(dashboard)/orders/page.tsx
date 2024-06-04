@@ -49,7 +49,8 @@ import OrderDetails from "./_components/order-details";
 import SalesDetails from "./_components/sales-details";
 import { useGetAllOrders } from "./_hooks/use-orders.hook";
 import { useOrderStore } from "./_store";
-import OrdersSummary from "./_components/orders-summary";
+import TopProducts from "./_components/charts/top-products";
+import OrdersCount from "./_components/charts/orders-count";
 
 const OrdersPage = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -138,7 +139,7 @@ const OrdersPage = () => {
           <SalesDetails></SalesDetails>
         </div>
         <div className="hidden lg:block">
-          <OrdersSummary />
+          <OrdersCount />
         </div>
         <Tabs defaultValue="week">
           <div className="flex items-center">
@@ -201,7 +202,6 @@ const OrdersPage = () => {
                   Recent orders from your store.
                 </CardDescription>
               </CardHeader>
-
               <CardContent>
                 <Table>
                   <TableHeader>
@@ -297,9 +297,15 @@ const OrdersPage = () => {
           </TabsContent>
         </Tabs>
       </div>
-      {order && <OrderDetails order={order}></OrderDetails>}
-      <div className="block lg:hidden">
-        <OrdersSummary />
+      <div className="grid gap-3">
+        <div className="hidden lg:block">
+          <TopProducts></TopProducts>
+        </div>
+        {order && <OrderDetails order={order}></OrderDetails>}
+      </div>
+      <div className="block space-y-3 lg:hidden">
+        <OrdersCount />
+        <TopProducts></TopProducts>
       </div>
     </main>
   );
