@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAllOrders } from "../_services";
+import { getAllOrders } from "../_services/orders.service";
 import type { OrderStatusType } from "@/lib/constants";
 import { useOrderStore } from "../_store";
 

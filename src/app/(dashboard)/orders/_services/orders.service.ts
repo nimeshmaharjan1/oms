@@ -7,7 +7,7 @@ export const getAllOrders = async ({
 }: {
   params?: Record<string, any>;
 }) => {
-  const response: AxiosResponse<ResponseType<Order>> = await axios.get(
+  const response: AxiosResponse<ResponseType<Order[]>> = await axios.get(
     "/orders/api",
     {
       // params: {

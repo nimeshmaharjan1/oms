@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
       data: orders,
       pagination,
       filters,
-    } as ResponseType<Order>);
+    } as ResponseType<Order[]>);
   } catch (error) {
     console.error("Error fetching orders:", error);
     return Response.json(

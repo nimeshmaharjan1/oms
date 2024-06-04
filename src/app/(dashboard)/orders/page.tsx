@@ -1,5 +1,5 @@
 "use client";
-import { ListFilter, Loader2, Search } from "lucide-react";
+import { ListFilter, Search } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -19,7 +19,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Progress } from "@/components/ui/progress";
+import { Input } from "@/components/ui/input";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import { Separator } from "@/components/ui/separator";
 import {
   Table,
   TableBody,
@@ -29,27 +38,17 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { ORDER_STATUS } from "@/lib/constants";
+import { cn, formatPrice } from "@/lib/utils";
+import type { ResponsePaginationType } from "@/types/global.types";
+import { useDebounce } from "@uidotdev/usehooks";
+import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import CreateOrderCard from "./_components/create/card";
 import OrderDetails from "./_components/order-details";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import { ORDER_STATUS, type OrderStatusType } from "@/lib/constants";
-import { useEffect, useState } from "react";
-import { Separator } from "@/components/ui/separator";
-import { Controller, useForm } from "react-hook-form";
-import { useDebounce } from "@uidotdev/usehooks";
-import { Input } from "@/components/ui/input";
+import SalesDetails from "./_components/sales-details";
 import { useGetAllOrders } from "./_hooks/use-orders.hook";
-import type { ResponsePaginationType } from "@/types/global.types";
 import { useOrderStore } from "./_store";
-import { cn } from "@/lib/utils";
 
 const OrdersPage = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -58,7 +57,7 @@ const OrdersPage = () => {
       status: "",
       search: "",
       page: 1,
-      limit: 5,
+      limit: 10,
     },
   });
   const debouncedSearchTerm = useDebounce(queryForm.watch("search"), 300);
@@ -77,8 +76,6 @@ const OrdersPage = () => {
   const generatePaginationItems = (paginationData: ResponsePaginationType) => {
     const { current, totalPages } = paginationData;
     const pages = [];
-    const maxPagesToShow = 5; // Adjust this number based on your preference
-
     // Add previous button
     if (paginationData.prev !== null) {
       pages.push(
@@ -132,38 +129,11 @@ const OrdersPage = () => {
   if (!isMounted) return;
 
   return (
-    <main className="lg:grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
-      <div className="lg:grid space-y-3 lg:space-y-0 auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
+    <main className="lg:grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-6 lg:grid-cols-3 xl:grid-cols-3">
+      <div className="lg:grid space-y-3 lg:space-y-0 auto-rows-max items-start gap-4 md:gap-6 lg:col-span-2">
         <div className="lg:grid space-y-3 lg:space-y-0 gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
           <CreateOrderCard></CreateOrderCard>
-          <Card x-chunk="dashboard-05-chunk-1">
-            <CardHeader className="pb-2">
-              <CardDescription>This Week</CardDescription>
-              <CardTitle className="text-4xl">$1,329</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-xs text-muted-foreground">
-                +25% from last week
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Progress value={25} aria-label="25% increase" />
-            </CardFooter>
-          </Card>
-          <Card x-chunk="dashboard-05-chunk-2">
-            <CardHeader className="pb-2">
-              <CardDescription>This Month</CardDescription>
-              <CardTitle className="text-4xl">$5,329</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-xs text-muted-foreground">
-                +10% from last month
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Progress value={12} aria-label="12% increase" />
-            </CardFooter>
-          </Card>
+          <SalesDetails></SalesDetails>
         </div>
         <Tabs defaultValue="week">
           <div className="flex items-center">
@@ -301,7 +271,7 @@ const OrdersPage = () => {
                             {new Date(rowOrder.createdAt).toDateString()}
                           </TableCell>
                           <TableCell className="text-right">
-                            ${rowOrder.price}
+                            {formatPrice(rowOrder.price)}
                           </TableCell>
                         </TableRow>
                       ))

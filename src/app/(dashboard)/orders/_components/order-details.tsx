@@ -32,9 +32,11 @@ import {
 } from "@/components/ui/pagination";
 import { Separator } from "@/components/ui/separator";
 import { useOrderStore } from "../_store";
+import { formatPrice } from "@/lib/utils";
 
 const OrderDetails = () => {
   const { order } = useOrderStore();
+  if (!order) return <>Loading...</>;
   return (
     <div>
       <Card className="overflow-hidden" x-chunk="dashboard-05-chunk-4">
@@ -57,7 +59,7 @@ const OrderDetails = () => {
             </CardDescription>
           </div>
           <div className="ml-auto flex items-center gap-1">
-            <Button size="sm" variant="outline" className="h-8 gap-1">
+            <Button disabled size="sm" variant="outline" className="h-8 gap-1">
               <Truck className="h-3.5 w-3.5" />
               <span className="lg:sr-only xl:not-sr-only xl:whitespace-nowrap">
                 Track Order
@@ -72,7 +74,7 @@ const OrderDetails = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem>Edit</DropdownMenuItem>
-                <DropdownMenuItem>Export</DropdownMenuItem>
+                {/* <DropdownMenuItem>Export</DropdownMenuItem> */}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>Trash</DropdownMenuItem>
               </DropdownMenuContent>
@@ -87,14 +89,14 @@ const OrderDetails = () => {
                 <span className="text-muted-foreground">
                   {order?.product_name} x <span>{order?.quantity}</span>
                 </span>
-                <span>${order?.price}</span>
+                <span>{formatPrice(order?.price)}</span>
               </li>
             </ul>
             <Separator className="my-2" />
             <ul className="grid gap-3">
               <li className="flex items-center justify-between">
                 <span className="text-muted-foreground">Subtotal</span>
-                <span>${order?.price}</span>
+                <span>{formatPrice(order?.price)}</span>
               </li>
               <li className="flex items-center justify-between">
                 <span className="text-muted-foreground">Shipping</span>
@@ -106,7 +108,7 @@ const OrderDetails = () => {
               </li>
               <li className="flex items-center justify-between font-semibold">
                 <span className="text-muted-foreground">Total</span>
-                <span>${order?.price}</span>
+                <span>{formatPrice(order?.price)}</span>
               </li>
             </ul>
           </div>
@@ -168,7 +170,7 @@ const OrderDetails = () => {
               {order?.updatedAt && new Date(order?.updatedAt).toLocaleString()}
             </time>
           </div>
-          <Pagination className="ml-auto mr-0 w-auto">
+          {/* <Pagination className="ml-auto mr-0 w-auto">
             <PaginationContent>
               <PaginationItem>
                 <Button size="icon" variant="outline" className="h-6 w-6">
@@ -183,7 +185,7 @@ const OrderDetails = () => {
                 </Button>
               </PaginationItem>
             </PaginationContent>
-          </Pagination>
+          </Pagination> */}
         </CardFooter>
       </Card>
     </div>
