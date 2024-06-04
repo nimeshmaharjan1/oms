@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+## "Develop a Responsive E-commerce Order Management System"
 
-First, run the development server:
+- This project has been developed as a coding assignment, OMS meaning Order Management System.
+- The tech stack used is Next.js, Prisma and SQLite for the frontend and the backend as well.
+- I have created my own APIs for the orders CRUD functionalites and the data visualization.
+- Tailwind CSS and Shadcn has been used for the styling and the components without the use of any CSS preprocessors.
+- As for the state management I have used Zustand.
+- I have used a modular approach for the folder architecture everything scoped to its own parent module and the shared files in the root source directory.
 
-```bash
+## Development Setup
+
+```
+npm i
+```
+```
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Dark Mode
+![image](https://github.com/nimeshmaharjan1/oms/assets/86953478/1e2db90d-4dbc-473e-820e-df4ba34b8b83)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Responsiveness
+![image](https://github.com/nimeshmaharjan1/oms/assets/86953478/a78cbf68-02c7-49b9-bb9a-8608496085cd)
+![image](https://github.com/nimeshmaharjan1/oms/assets/86953478/c5145615-4e36-4251-96ba-d46ae3b201f5)
+![image](https://github.com/nimeshmaharjan1/oms/assets/86953478/94ebd242-d5f1-4cf4-9d22-010c74099d1b)
+![image](https://github.com/nimeshmaharjan1/oms/assets/86953478/d4d94353-27a1-4591-8829-eb4990c68e43)
+![image](https://github.com/nimeshmaharjan1/oms/assets/86953478/66050ccc-164f-4908-aa5a-e67f8ceb0211)
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- Filter by the order status
+![image](https://github.com/nimeshmaharjan1/oms/assets/86953478/ea1ba97a-1d62-42a5-be12-f3ec0c4df99e)
 
-## Learn More
+- Search by the product
+![image](https://github.com/nimeshmaharjan1/oms/assets/86953478/1ccaa9dd-9a4d-45d7-addc-671346c79266)
 
-To learn more about Next.js, take a look at the following resources:
+- Search by the customer
+![image](https://github.com/nimeshmaharjan1/oms/assets/86953478/3109ee10-d33f-4c96-93d0-289cc74a0b19)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Search By Order ID
+![image](https://github.com/nimeshmaharjan1/oms/assets/86953478/90a7a864-a186-4147-a48e-cec8f398d549)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
