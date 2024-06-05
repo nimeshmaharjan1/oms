@@ -1,12 +1,15 @@
 
 ## "Develop a Responsive E-commerce Order Management System"
 
+- Live URL: https://oms-lime.vercel.app/orders
+
 - This project has been developed as a coding assignment, OMS meaning Order Management System.
 - The tech stack used is Next.js, Prisma and SQLite for the frontend and the backend as well.
 - I have created my own APIs for the orders CRUD functionalites and the data visualization.
 - Tailwind CSS and Shadcn has been used for the styling and the components without the use of any CSS preprocessors.
 - As for the state management I have used Zustand.
 - I have used a modular approach for the folder architecture everything scoped to its own parent module and the shared files in the root source directory.
+- 5th June 2024 => switched to Vercel Postgres from SQLite as SQLite does not run on serverless deployments
 
 ## Development Setup
 
