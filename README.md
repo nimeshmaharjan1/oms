@@ -21,6 +21,8 @@ npx prisma db seed
 npm run dev
 ```
 
+- The .env file is already included
+
 ## Preview
 
 
