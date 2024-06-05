@@ -11,7 +11,7 @@ datasource db {
 
 model Order {
   id               String   @id @default(cuid())
-  order_id         String   @unique
+  order_id         String
   customer_name    String
   shipping_address String
   product_name     String
