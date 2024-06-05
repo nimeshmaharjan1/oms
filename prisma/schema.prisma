@@ -5,8 +5,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = "postgres://default:MvaTl4obR5Xy@ep-orange-surf-a18vzt56-pooler.ap-southeast-1.aws.neon.tech/verceldb?pgbouncer=true&connect_timeout=15&sslmode=require"
 }
 
 model Order {

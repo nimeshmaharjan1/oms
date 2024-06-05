@@ -77,6 +77,7 @@ export async function GET(request: NextRequest) {
     return Response.json(
       {
         message: "Error fetching orders",
+        error: error,
       },
       {
         status: 500,
